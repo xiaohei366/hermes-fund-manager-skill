@@ -1,0 +1,10 @@
+portfolio.json
+portfolio_events.jsonl
+*.env
+*.key
+*.secret
+screenshots/
+private/
+__pycache__/
+*.pyc
+.pytest_cache/

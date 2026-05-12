@@ -1,0 +1,7 @@
+interface:
+  display_name: "Hermes Fund Manager"
+  short_description: "基金行情持仓汇报与风控调整建议"
+  default_prompt: "Use $hermes-fund-manager to summarize today's A-share market, my fund holdings, and risk-aware adjustment suggestions."
+
+policy:
+  allow_implicit_invocation: true
