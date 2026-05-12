@@ -1,35 +1,40 @@
-# Tiantian Fund Data Priority
+# 天天基金数据优先级
 
-Use Tiantian Fund skills when `TTFUND_APIKEY` is present. If it is missing, stop Tiantian calls and tell the user:
+当本机存在 `TTFUND_APIKEY` 时，优先使用天天基金 Skill。若缺少该环境变量，停止天天基金调用，并提示用户：
 
 `当前未检测到 TTFUND_APIKEY，请先前往天天基金搜索 skills 获取 apikey，并在本机配置该环境变量后重试。`
 
-Gateway:
+统一网关：
 
-- URL: `https://skills.tiantianfunds.com/ai-smart-skill-service/openapi/skill/invoke`
-- Method: `POST`
-- Header: `X-API-Key: $TTFUND_APIKEY`
-- Body must include `skill_id` and `_skill_version`.
+- URL：`https://skills.tiantianfunds.com/ai-smart-skill-service/openapi/skill/invoke`
+- Method：`POST`
+- Header：`X-API-Key: $TTFUND_APIKEY`
+- Body 必须包含 `skill_id` 和 `_skill_version`
 
-## Useful Skills
+## 常用 Skill
 
-| Purpose | skill_id | version | Use |
+| 用途 | skill_id | version | 使用场景 |
 | --- | --- | --- | --- |
-| Fund details | `FUND_BASE_INFOS` | `1.2.0` | Fund profile, classification, benchmark, trading rules, historical NAV context |
-| Fund holdings | `FUND_HOLDING_INFO` | `1.0.0` | Heavy stocks/bonds, industry allocation, position data |
-| Fund NAV | `FUND_NAV_INFO` | `1.0.0` | Daily NAV, accumulated NAV, daily return, dividend/split events |
-| Index info | `FUND_INDEX_INFO` | `1.0.0` | Index quote, valuation, composition, performance, related products |
-| Fund search | `FUND_SEARCH` | `1.0.0` | Resolve fund/index/manager/strategy candidates before detail calls |
-| Condition select | `FUND_CONDITION_SELECT` | `1.1.0` | Fund screening and ranking; not a full A-share sector ranking source |
+| 基金详情 | `FUND_BASE_INFOS` | `1.2.0` | 基金档案、分类、业绩基准、交易规则、历史净值上下文 |
+| 基金持仓 | `FUND_HOLDING_INFO` | `1.0.0` | 重仓股债、行业配置、仓位信息 |
+| 基金净值 | `FUND_NAV_INFO` | `1.0.0` | 单日净值、累计净值、日涨跌幅、分红拆分事件 |
+| 指数行情 | `FUND_INDEX_INFO` | `1.0.0` | 指数行情、估值、成分、表现、相关产品 |
+| 基金搜索 | `FUND_SEARCH` | `1.0.0` | 查询基金、指数、基金经理、投顾策略候选 |
+| 条件选基 | `FUND_CONDITION_SELECT` | `1.1.0` | 基金筛选和排序；不能当作全市场 A 股板块排行榜 |
 
-## Boundary
+## 能力边界
 
-Tiantian Fund can query known indexes and fund-related entities, but the current skill list does not expose a full market sector quote ranking. For "all A-share sectors Top 5 gainers/losers", use Eastmoney sector quotes and label the source.
+天天基金适合查询已知基金、指数和基金相关实体。当前 Skill 清单没有“全市场板块涨跌排行榜”能力。
 
-## Fallback
+因此：
 
-If a Tiantian request fails, times out, or returns unusable data:
+- 基金/指数/持仓相关数据优先天天基金。
+- “A 股所有板块涨幅 Top5 / 跌幅 Top5”使用东方财富板块行情，并在报告中标注来源。
 
-1. Continue with structured fallback data only when needed.
-2. Clearly mark the affected section.
-3. End the report with: `本次部分数据因天天基金接口不可用，使用网络搜索/其他公开行情源兜底。`
+## 兜底规则
+
+如果天天基金请求失败、超时或返回数据不可用：
+
+1. 只在必要时使用结构化行情或网络搜索兜底。
+2. 在受影响章节标注数据来源。
+3. 报告结尾附上：`本次部分数据因天天基金接口不可用，使用网络搜索/其他公开行情源兜底。`

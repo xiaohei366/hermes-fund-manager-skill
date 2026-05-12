@@ -1,35 +1,36 @@
 ---
 name: hermes-fund-manager
-description: Provide Hermes personal assistant workflows for China fund management, A-share market summaries, fund holding reports, fund-news daily briefings, risk-aware portfolio adjustment suggestions, and local portfolio persistence from screenshots. Use when the user asks for A-share sector movement summaries, fund portfolio tracking, fund daily reports, investment-sector explanations, holding updates, or screenshot-based fund position extraction.
+description: 为 Hermes 个人助理提供中文优先的基金管理工作流，包括 A 股市场汇报、板块涨跌 Top5、基金持仓跟踪、基金行业日报、风险型持仓调整建议，以及从截图识别并本地持久化基金持仓。适用于用户询问 A 股板块汇报、基金持仓跟踪、基金日报、投资板块解释、持仓更新、截图识别基金仓位等场景。
 ---
 
-# Hermes Fund Manager
+# Hermes 基金管理
 
-## Core Rules
+## 核心规则
 
-- Treat this skill as an analysis and reporting workflow, not a trading system.
-- Never output certain buy/sell commands, return promises, or personalized suitability claims.
-- Use data-source priority strictly:
-  1. Use Tiantian Fund skills for fund details, NAV, holdings, fund search, and index information.
-  2. Use Eastmoney sector quote endpoints for A-share sector Top 5 gainers/losers because Tiantian Fund does not expose a full sector ranking skill.
-  3. Use web search only as fallback for unavailable structured data or for news-cause verification.
-- Explicitly disclose fallback use at the end of the report.
-- Keep private portfolio data local under `C:\Users\admin\.codex\hermes\fund-manager\`; do not publish it to GitHub.
+- 默认使用中文回答；如果用户明确要求英文，再切换为英文。
+- 将本 Skill 视为“分析与汇报工作流”，不是交易系统。
+- 不输出确定性买卖指令、收益承诺或个性化适当性结论。
+- 严格按数据源优先级取数：
+  1. 基金详情、净值、基金持仓、基金搜索、指数信息优先使用天天基金 Skill。
+  2. A 股板块涨跌 Top5 使用东方财富板块行情，因为天天基金当前没有全市场板块排行榜能力。
+  3. 只有结构化数据不可用或需要新闻原因验证时，才使用网络搜索兜底。
+- 如果使用了兜底数据，必须在报告结尾明确说明。
+- 私人持仓数据只保存在 `C:\Users\admin\.codex\hermes\fund-manager\`，不要发布到 GitHub。
 
-## Workflow Selection
+## 工作流选择
 
-Use the requested intent to choose one workflow:
+根据用户意图选择一个工作流：
 
-- **A-share trading report**: market overview, major indexes, sector Top 5 gainers/losers, cause analysis, and risk-aware adjustment suggestions.
-- **Personal holding report**: read local portfolio data, map holdings to funds/sectors/indexes, report same-day movement and reasons, then provide adjustment suggestions.
-- **Fund news daily**: summarize today or a requested date's fund-industry news directly in chat; do not generate documents.
-- **Portfolio update**: extract positions from user screenshots or structured text, normalize data, show a diff, and write only after user confirmation.
+- **A 股交易时段汇报**：市场概览、主要指数、板块涨跌 Top5、原因分析、风险型调整建议。
+- **个人持仓汇报**：读取本地持仓，映射基金/板块/指数，汇报当天涨跌、原因和调整建议。
+- **基金行业日报**：汇总今天或指定日期的基金行业新闻，直接在聊天中回答，不生成文档。
+- **持仓更新**：从截图或结构化文本抽取持仓，归一化数据，先展示 diff，用户确认后再写入本地。
 
-Read `references/reporting.md` before composing reports. Read `references/advice_policy.md` before giving adjustment suggestions. Read `references/ttfund.md` before calling Tiantian Fund skills.
+写报告前读取 `references/reporting.md`。给调整建议前读取 `references/advice_policy.md`。调用天天基金前读取 `references/ttfund.md`。
 
-## Portfolio Persistence
+## 本地持仓持久化
 
-Use `scripts/portfolio_store.py` for local storage:
+使用 `scripts/portfolio_store.py` 管理本地持仓：
 
 ```powershell
 python scripts/portfolio_store.py init
@@ -38,28 +39,39 @@ python scripts/portfolio_store.py validate
 python scripts/portfolio_store.py merge-snapshot snapshot.json
 ```
 
-Default files:
+默认文件：
 
-- Portfolio: `C:\Users\admin\.codex\hermes\fund-manager\portfolio.json`
-- Events: `C:\Users\admin\.codex\hermes\fund-manager\portfolio_events.jsonl`
+- 持仓：`C:\Users\admin\.codex\hermes\fund-manager\portfolio.json`
+- 事件：`C:\Users\admin\.codex\hermes\fund-manager\portfolio_events.jsonl`
 
-Before updating holdings from a screenshot:
+从截图更新持仓前：
 
-1. Extract fund name, code, amount, percentage, platform, and visible raw text.
-2. Use Tiantian Fund search to resolve missing or ambiguous fund codes.
-3. Produce a JSON snapshot matching `references/portfolio_schema.json`.
-4. Run `merge-snapshot` only after the user confirms the proposed changes.
+1. 识别基金名称、基金代码、持仓金额、占比、平台和原始可见文本。
+2. 用天天基金搜索补全或校验缺失/不确定的基金代码。
+3. 生成符合 `references/portfolio_schema.json` 的 JSON 快照。
+4. 展示新增、删除、金额变化、占比变化和板块标签变化。
+5. 只有用户确认后，才运行 `merge-snapshot` 写入本地。
 
-## Output Contract
+## 输出约定
 
-Every report should include:
+每次汇报应包含：
 
-- Data timestamp and trading-day status.
-- Market overview.
-- Sector gainers/losers or holding-related movement.
-- Cause analysis with source labels.
-- Adjustment suggestions with evidence and risk level.
-- Data-source disclosure and fallback disclosure.
-- Brief risk notice: informational only, not investment advice.
+- 数据时间和交易日状态。
+- 市场概览。
+- 板块涨跌或持仓相关方向表现。
+- 带来源标签的原因分析。
+- 有证据支撑的调整建议和风险等级。
+- 数据来源和兜底说明。
+- 简短风险提示：仅供信息参考，不构成投资建议。
 
-Keep the response concise enough for scheduled-agent delivery. Prefer tables for Top 5 lists and holdings. Do not include raw JSON unless the user asks.
+中文报告建议使用以下标题：
+
+- `市场概览`
+- `板块涨跌Top5`
+- `持仓影响`
+- `原因分析`
+- `调整建议`
+- `数据来源`
+- `风险提示`
+
+定时 agent 场景下保持内容精炼。Top5 和持仓明细优先使用表格。除非用户要求，不要输出原始 JSON。

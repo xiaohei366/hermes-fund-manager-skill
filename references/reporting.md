@@ -1,58 +1,56 @@
-# Reporting Templates
+# 汇报模板
 
-## A-share Trading Report
+## A 股交易时段汇报
 
-Use this structure:
+使用以下结构：
 
-1. `市场概览`: major index movement, turnover, northbound/major fund flow if available, risk tone.
-2. `板块涨跌Top5`: two tables, gainers and losers. Columns: sector, change %, key catalysts, source.
-3. `原因分析`: explain policy, industry news, macro, earnings, liquidity, and sentiment separately when relevant.
-4. `调整建议`: use the levels from `advice_policy.md`; include evidence and do not issue deterministic trades.
-5. `数据来源`: list Tiantian Fund, Eastmoney, news/search fallback if used.
+1. `市场概览`：主要指数涨跌、成交额、资金面或市场风险偏好。
+2. `板块涨跌Top5`：分别列出涨幅 Top5 和跌幅 Top5。建议字段：板块、涨跌幅、主要催化、数据来源。
+3. `原因分析`：按政策、行业新闻、宏观、业绩、流动性、情绪分别解释；不要只给单一原因。
+4. `调整建议`：使用 `advice_policy.md` 中的建议等级，说明依据，不输出确定性买卖指令。
+5. `数据来源`：列出天天基金、东方财富、新闻或搜索兜底来源。
 
-## Personal Holding Report
+## 个人持仓汇报
 
-Read the local portfolio first:
+先读取本地持仓：
 
 ```powershell
 python scripts/portfolio_store.py show
 ```
 
-If no holdings exist, ask the user to update holdings with a screenshot or structured list.
+如果没有持仓，提示用户先通过截图或结构化列表更新持仓。
 
-For each holding:
+逐只基金处理：
 
-- Resolve fund details and latest NAV with Tiantian Fund.
-- Use fund holdings or declared sector tags to map the fund to sectors/indexes.
-- Compare holding weight with today's sector/index movement.
-- Explain causes and include a specific risk-aware suggestion level.
+- 用天天基金查询基金详情和最新净值。
+- 用基金持仓、行业配置或本地 `sector_tags` 映射到板块/指数。
+- 结合持仓占比和当日相关板块/指数涨跌解释影响。
+- 每只重点持仓都给出一个风险型建议等级。
 
-Suggested table columns:
+建议表格：
 
 | 基金 | 持仓占比 | 关联方向 | 今日表现 | 原因 | 建议等级 |
 
-## Fund News Daily
+## 基金行业日报
 
-Follow the spirit of the referenced fund-news-daily skill: prioritize reliable fund-industry sources and avoid irrelevant market noise.
+参考 fund-news-daily 的思路：优先可靠的基金行业信息源，过滤无关市场噪音。直接在聊天中回答，不生成 Word/PDF。
 
-Sections:
+建议结构：
 
-1. `今日重点`: 3-5 highest-impact fund/asset-management items.
-2. `政策与监管`: fund industry, fee reform, pension, ETF, asset allocation, compliance.
-3. `产品与资金`: new fund issuance, ETF flow, major fund manager actions, public-fund positioning.
-4. `市场影响`: connect news to A-share sectors, broad indexes, and fund categories.
-5. `对持仓的启示`: only if local holdings exist.
+1. `今日重点`：3-5 条最重要的基金/资管行业信息。
+2. `政策与监管`：基金费率、ETF、公募监管、养老、资产配置等。
+3. `产品与资金`：新基金发行、ETF 资金流、基金经理动作、公募仓位。
+4. `市场影响`：连接到 A 股板块、宽基指数和基金分类。
+5. `对持仓的启示`：仅在本地有持仓时输出。
 
-Do not generate Word or PDF output. Answer directly in chat.
+## 原因分析检查清单
 
-## Cause Analysis Checklist
+优先使用以下证据：
 
-Prefer evidence in this order:
+1. 结构化行情涨跌。
+2. 当天权威新闻。
+3. 板块或行业催化。
+4. 宏观和政策背景。
+5. 市场情绪或技术面解释。
 
-1. Structured quote movement.
-2. Same-day authoritative news.
-3. Sector-specific catalyst.
-4. Macro/policy context.
-5. Market sentiment or technical explanation.
-
-Avoid single-cause explanations when several forces are plausible. State uncertainty when the cause is inferred.
+如果原因是推断出来的，要明确使用“可能”“或与……有关”等不确定表达。

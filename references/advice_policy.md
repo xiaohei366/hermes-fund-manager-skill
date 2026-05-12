@@ -1,41 +1,47 @@
-# Adjustment Advice Policy
+# 调整建议规则
 
-Adjustment suggestions are informational risk-control prompts, not investment advice.
+调整建议只能作为信息辅助和风险控制提示，不构成投资建议。
 
-## Allowed Suggestion Levels
+## 允许的建议等级
 
-| Level | Use When | Allowed Wording |
+| 等级 | 适用情况 | 推荐表达 |
 | --- | --- | --- |
-| `保持观察` | Movement is normal and no clear thesis break appears | Continue monitoring catalyst durability, valuation, and position weight |
-| `考虑再平衡` | A fund/sector weight is high or volatility rises sharply | Consider whether the position has exceeded planned allocation |
-| `降低追涨风险` | Short-term gains are news-driven or valuation pressure is visible | Avoid adding purely because of short-term momentum; wait for confirmation |
-| `关注补仓窗口` | Holding direction falls but long-term thesis appears intact | Watch for staged entry conditions; do not frame as a direct buy instruction |
-| `风险预警` | Policy, earnings, liquidity, concentration, or drawdown risks rise | Review exposure and define a risk threshold before acting |
+| `保持观察` | 涨跌处于正常波动区间，基本面或政策逻辑没有明显变化 | 继续观察催化持续性、估值和仓位变化 |
+| `考虑再平衡` | 单只基金或单一板块占比偏高，或波动明显放大 | 核对该方向是否已超过计划仓位，考虑降低集中度 |
+| `降低追涨风险` | 短期涨幅主要由情绪或单一新闻驱动，估值压力可见 | 不因短线涨幅直接追加，等待数据或政策确认 |
+| `关注补仓窗口` | 持仓方向下跌，但长期逻辑暂未被破坏 | 观察分批条件和风险阈值，不直接写成买入建议 |
+| `风险预警` | 出现政策、业绩、流动性、集中度或回撤风险 | 复核风险敞口，提前设定处理阈值 |
 
-## Evidence Required
+## 建议必须有依据
 
-Every suggestion must cite at least two of:
+每条建议至少引用以下两类证据：
 
-- Portfolio weight or amount.
-- Fund NAV or related index movement.
-- Sector Top 5 movement.
-- Fund holdings or sector allocation.
-- Same-day news or policy catalyst.
-- Valuation, drawdown, or volatility signal if available.
+- 持仓金额或持仓占比。
+- 基金净值或相关指数涨跌。
+- 板块 Top5 涨跌情况。
+- 基金重仓或行业配置。
+- 当天新闻、政策或行业催化。
+- 估值、回撤或波动信号。
 
-## Forbidden
+## 禁止表达
 
-- "必须买入", "立即卖出", "稳赚", "确定反弹", "保证收益".
-- Advice based only on a single news item.
-- Suggestions that ignore current holding weight.
-- Personalized suitability claims such as "这适合你的风险偏好" unless the user has explicitly supplied a risk profile.
+不要写：
 
-## Safer Language
+- `必须买入`
+- `立即卖出`
+- `稳赚`
+- `确定反弹`
+- `保证收益`
+- 只根据一条新闻给出的买卖建议
+- 忽略当前持仓占比的调整建议
+- 在用户没有提供风险画像时，声称“适合你的风险偏好”
 
-Use:
+## 推荐表达
 
-- "可以纳入观察"
-- "建议先核对仓位是否超过计划比例"
-- "若后续数据确认，再考虑分批处理"
-- "当前更适合风险预警而不是追涨"
-- "该判断依赖今日公开数据，后续需跟踪"
+优先使用：
+
+- `可以纳入观察`
+- `建议先核对仓位是否超过计划比例`
+- `若后续数据确认，再考虑分批处理`
+- `当前更适合风险预警而不是追涨`
+- `该判断依赖今日公开数据，后续需继续跟踪`
