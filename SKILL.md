@@ -74,4 +74,4 @@ python scripts/portfolio_store.py merge-snapshot snapshot.json
 - `数据来源`
 - `风险提示`
 
-定时 agent 场景下保持内容精炼。Top5 和持仓明细优先使用表格。除非用户要求，不要输出原始 JSON。
+定时智能体场景下保持内容精炼。Top5 和持仓明细优先使用表格。除非用户要求，不要输出原始 JSON。
