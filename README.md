@@ -25,6 +25,7 @@
 │   └── openai.yaml
 ├── references/
 │   ├── advice_policy.md
+│   ├── data_validation.md
 │   ├── portfolio_schema.json
 │   ├── reporting.md
 │   └── ttfund.md
@@ -61,6 +62,8 @@ C:\Users\admin\.codex\skills\hermes-fund-manager\SKILL.md
 
 如果使用了兜底数据，报告结尾必须显式说明。
 
+报告中的行情、板块、新闻原因和调整建议会标注 `双源一致 / 多源确认 / 单源待验证 / 数据分歧`。板块涨跌以东方财富为主，但需要至少尝试一个其他来源做交叉验证。
+
 ## 天天基金 API Key
 
 使用天天基金 Skill 前需要配置环境变量 `TTFUND_APIKEY`。
@@ -94,6 +97,30 @@ python scripts/portfolio_store.py merge-snapshot snapshot.json
 `merge-snapshot` 接收的 JSON 结构参考 `references/portfolio_schema.json`。如果数据来自截图，智能体应先识别截图，生成候选持仓快照，展示新增/删除/变化差异，再在你确认后写入本地文件。
 
 ## 推荐给智能体的测试提示词
+
+### 定时任务建议
+
+```text
+交易日 08:45 盘前任务：
+使用 $hermes-fund-manager 生成盘前基金与A股简报。请按盘前模式处理：隔夜市场、政策新闻、资金预期、今日主线、我持仓相关方向的风险提示。不要强行汇报盘中涨跌。
+```
+
+```text
+交易日 10:30 / 14:30 盘中任务：
+使用 $hermes-fund-manager 汇报盘中A股整体情况、板块涨跌Top5、我持仓相关方向的涨跌和原因，并给出风险型调整建议。请包含资金面、情绪面、数据验证状态和建议置信度。
+```
+
+```text
+交易日 15:30 或 16:00 收盘后任务：
+使用 $hermes-fund-manager 生成收盘后复盘。请总结今日A股整体表现、板块涨跌Top5、我持仓相关方向表现、原因分析、今日主线、调整建议、建议置信度和数据验证状态。复盘结束后，必须询问我是否要根据最新持仓截图更新本地持仓信息；如果我提供截图，请先识别并展示新增、删除、金额变化、占比变化和板块标签变化的差异，等待我确认后再写入本地。
+```
+
+```text
+非交易日 09:30 或 20:30 任务：
+使用 $hermes-fund-manager 生成非交易日基金行业日报。不要汇报不存在的今日行情涨跌；请重点汇总基金行业新闻、政策与监管、产品与资金变化，并检查我的持仓结构风险。
+```
+
+### 手动测试提示词
 
 ```text
 使用 $hermes-fund-manager 汇报今天 A 股整体情况，说明涨幅 Top5 和跌幅 Top5 板块，并给出原因分析和风险提示。
