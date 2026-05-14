@@ -31,9 +31,11 @@
 │   └── ttfund.md
 ├── scripts/
 │   ├── __init__.py
-│   └── portfolio_store.py
+│   ├── portfolio_store.py
+│   └── render_report.py
 └── tests/
-    └── test_portfolio_store.py
+    ├── test_portfolio_store.py
+    └── test_render_report.py
 ```
 
 ## 安装方式
@@ -96,6 +98,43 @@ python scripts/portfolio_store.py merge-snapshot snapshot.json
 
 `merge-snapshot` 接收的 JSON 结构参考 `references/portfolio_schema.json`。如果数据来自截图，智能体应先识别截图，生成候选持仓快照，展示新增/删除/变化差异，再在你确认后写入本地文件。
 
+## 报告产物格式
+
+默认情况下，Skill 的报告产物是**聊天内中文 Markdown**，不会自动生成文件。
+
+如果你希望定时任务沉淀报告，可以要求智能体保存文件：
+
+- Markdown：适合继续编辑和后续解析。
+- HTML：适合浏览器查看和打印。
+- PDF：适合归档和分享，但需要本机安装 Playwright/Chromium。
+
+默认归档目录：
+
+```text
+C:\Users\admin\.codex\hermes\fund-manager\reports
+```
+
+渲染命令：
+
+```powershell
+python scripts/render_report.py report.md --formats md,html --title "Hermes 基金管理报告"
+```
+
+生成 PDF：
+
+```powershell
+python scripts/render_report.py report.md --formats md,html,pdf --title "Hermes 基金管理报告"
+```
+
+如果本机没有 PDF 依赖，先安装：
+
+```powershell
+python -m pip install playwright
+python -m playwright install chromium
+```
+
+建议：定时任务默认只让智能体在聊天中汇报；只有你明确需要归档时，再在 prompt 中加入“同时保存 Markdown/HTML/PDF”。
+
 ## 推荐给智能体的测试提示词
 
 ### 定时任务建议
@@ -113,6 +152,13 @@ python scripts/portfolio_store.py merge-snapshot snapshot.json
 ```text
 交易日 15:30 或 16:00 收盘后任务：
 使用 $hermes-fund-manager 生成收盘后复盘。请总结今日A股整体表现、板块涨跌Top5、我持仓相关方向表现、原因分析、今日主线、调整建议、建议置信度和数据验证状态。复盘结束后，必须询问我是否要根据最新持仓截图更新本地持仓信息；如果我提供截图，请先识别并展示新增、删除、金额变化、占比变化和板块标签变化的差异，等待我确认后再写入本地。
+```
+
+如需 PDF 归档，可把收盘后任务改成：
+
+```text
+交易日 15:30 或 16:00 收盘后任务：
+使用 $hermes-fund-manager 生成收盘后复盘，并在聊天中汇报。请同时将最终报告保存为 Markdown、HTML 和 PDF 到本地 reports 目录。若 PDF 依赖不可用，请说明原因并至少保留 Markdown/HTML。复盘结束后，必须询问我是否要根据最新持仓截图更新本地持仓信息。
 ```
 
 ```text
@@ -155,6 +201,12 @@ python C:\Users\admin\.codex\skills\.system\skill-creator\scripts\quick_validate
 python -m unittest tests.test_portfolio_store -v
 ```
 
+运行报告渲染测试：
+
+```powershell
+python -m unittest tests.test_render_report -v
+```
+
 ## 隐私约束
 
 不要提交以下内容：
@@ -162,6 +214,7 @@ python -m unittest tests.test_portfolio_store -v
 - `portfolio.json`
 - `portfolio_events.jsonl`
 - 持仓截图
+- 生成的报告归档
 - API key
 - `.env` 文件
 - 缓存目录

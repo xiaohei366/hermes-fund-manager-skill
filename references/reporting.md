@@ -1,5 +1,17 @@
 # 汇报模板
 
+## 产物格式
+
+- 默认直接在聊天中输出中文 Markdown。
+- 定时任务只需要推送消息时，不生成文件。
+- 用户或定时任务要求“保存”“归档”“生成文件”时，使用 `scripts/render_report.py` 将报告保存为 Markdown 和 HTML。
+- 用户或定时任务明确要求 PDF 时，使用 `scripts/render_report.py --formats md,html,pdf`。PDF 依赖 Playwright/Chromium；若依赖缺失，输出安装提示并保留 Markdown/HTML 产物。
+- 默认归档目录：`C:\Users\admin\.codex\hermes\fund-manager\reports\`。
+
+```powershell
+python scripts/render_report.py report.md --formats md,html,pdf --title "Hermes 基金管理报告"
+```
+
 ## 时间窗口与自动模式
 
 如果用户没有明确指定模式，按 Asia/Shanghai 当前时间和交易日状态判断：

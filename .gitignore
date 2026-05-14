@@ -5,6 +5,7 @@ portfolio_events.jsonl
 *.secret
 screenshots/
 private/
+reports/
 __pycache__/
 *.pyc
 .pytest_cache/

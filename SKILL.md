@@ -34,6 +34,17 @@ description: 为 Hermes 个人助理提供中文优先的基金管理工作流�
 
 写报告前读取 `references/reporting.md` 和 `references/data_validation.md`。给调整建议前读取 `references/advice_policy.md`。调用天天基金前读取 `references/ttfund.md`。
 
+## 报告产物格式
+
+- 默认产物是聊天内中文 Markdown，不自动生成文件。
+- 如果用户或定时任务明确要求“保存报告”“生成文件”“沉淀归档”，先保存 Markdown 和 HTML。
+- 如果用户或定时任务明确要求 PDF，可以使用 `scripts/render_report.py` 生成 PDF；PDF 生成依赖 Playwright/Chromium，缺依赖时要提示安装，不要谎称已生成。
+- 报告文件默认保存在 `C:\Users\admin\.codex\hermes\fund-manager\reports\`，不要提交到 GitHub。
+
+```powershell
+python scripts/render_report.py report.md --formats md,html,pdf --title "Hermes 收盘后复盘"
+```
+
 ## 本地持仓持久化
 
 使用 `scripts/portfolio_store.py` 管理本地持仓：
